@@ -1,19 +1,18 @@
-class Worker:
-    def __init__(self, name, age):
+import threading
+import time
+
+
+class Worker(threading.Thread):
+    def __init__(self, x, y, name, surname, sprite_type):
+        threading.Thread.__init__(self)
         self.name = name
-        self.age = age
-    
-    def display(self):
-        print('I am a person', self)
+        self.surname = surname
+        self.sprite_type = sprite_type
+        # self.current_sprite
 
-    def great(self):
-        print("How you doing'?", self)
+    def daily_routine(self):
+        pass
 
-w1 = Worker("Tom", 20)
-w2 = Worker("Ben", 30)
-
-w1.display()
-w1.great()
-
-w2.display()
-w2.great()
+    def run(self):
+        print(self.name, self.surname, " is ready to work!")
+        self.daily_routine()
