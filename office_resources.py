@@ -40,6 +40,21 @@ class VendingMachine(Resource):
         super().__init__(self.sprite, x, y)
 
 
+class CopyMachine(Resource):
+
+    #def __init__(self, sprite, scale_x, scale_y, res_x):
+    def __init__(self, x, y, sprite):
+        # Scaling the base img to the size that is potentially going to be changed according to resolution.
+        # self.sprite = pg.transform.rotozoom(sprite, 0, 0.45)
+        # self.sprite_width, self.sprite_height = self.sprite.get_size()
+        # self.sprite = pg.transform.scale(self.sprite, (int(self.sprite_width * scale_x),
+        #                                               int(self.sprite_height * scale_y)))
+        # self.sprite_width, self.sprite_height = self.sprite.get_size()
+        # y = self.sprite_height / 4 + 1
+        # x = int(res_x / 3) + int(self.sprite_width / 20) + self.sprite_width
+        super().__init__(sprite, x, y)
+
+
 # Desks serve as a default position for new workers and furthermore cannot be shared between workers. The only way to
 # obtain staffed desk is for the current worker thread to end.
 class ComputerDesk(Resource):

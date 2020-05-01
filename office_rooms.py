@@ -6,6 +6,7 @@ from worker import Worker
 from office_resources import CoffeeMachine
 from office_resources import VendingMachine
 from office_resources import ComputerDesk
+from office_resources import CopyMachine
 
 
 class Room:
@@ -167,3 +168,59 @@ class DiningRoom(Room):
             super().blit_workers(self.workers)
         except AttributeError:
             return
+
+
+class CopyRoom(Room):
+    def __init__(self, RESX, RESY, res_x, res_y, copy_machine_sprite):
+        super().__init__(RESX, RESY, res_x, res_y)
+        # self.copy_machine = CopyMachine(copy_machine_sprite, RESX / 2180, RESY / 1700, res_x)
+
+        self.sprite_width, self.sprite_height = copy_machine_sprite.get_size()
+        self.sprite = pg.transform.scale(copy_machine_sprite, (int(self.sprite_width * RESX / 6180),
+                                                               int(self.sprite_height * RESY / 5500)))
+        self.sprite_width, self.sprite_height = self.sprite.get_size()
+        # y = self.sprite_height / 4 + 1
+        # x = int(res_x / 3) + int(self.sprite_width / 20) + self.sprite_width
+        self.copy_machines = []
+        self._init_copy_machines()
+        self.workers = []
+        self.copy_machine_queue = queue.Queue
+
+        # States that allow Worker objects to be stored in CopyRoom object. Those ending with "_response" indicate
+        # that the object is waiting for info on where to be placed - directly next to the resource or in queue.
+        self.acceptable_states = ["snack", "coffee", "snack_queue", "coffee_queue"]
+
+    def _init_copy_machines(self):
+        blitting = True
+        i = 0
+        while blitting:
+            row_blitting = True
+            j = 0
+            while row_blitting:
+                copy_x = int(self.sprite_width / 2) + j * self.sprite_width * 1.5 + j * int(
+                    self.sprite_width / 2)
+                copy_y = int(self.sprite_height / 2) + i * self.sprite_height * 1.3 + i * int(
+                    self.sprite_height / 2)
+                try:
+                    self.blit_object(copy_x, copy_y, self.sprite)
+                except exceptions.ObjectOutOfAcceptedXBoundsError:
+                    row_blitting = False
+                except exceptions.ObjectOutOfAcceptedYBoundsError:
+                    row_blitting = False
+                    blitting = False
+                else:
+                    self.copy_machines.append(CopyMachine(copy_x, copy_y, self.sprite))
+                j += 1
+                if j == 3:
+                    row_blitting = False
+            i += 1
+            if i == 2:
+                blitting = False
+
+    def blit_machines(self):
+        # self.blit_object(self.copy_machine.x, self.copy_machine.y, self.copy_machine.sprite)
+        for copy_machine in self.copy_machines:
+            self.blit_object(copy_machine.x, copy_machine.y, copy_machine.sprite)
+
+    def get_locks(self):
+        return {"copy_machine": self.copy_machine.lock}
