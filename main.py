@@ -1,5 +1,5 @@
 import pygame as pg
-from office_rooms import MainRoom
+from office_rooms import MainRoom, Archives
 from office_rooms import DiningRoom
 from office_rooms import CopyRoom
 
@@ -14,7 +14,7 @@ def main():
 
     # View setup
     view = 1
-    VIEWS = 3  # current amount of views    #changed!
+    VIEWS = 4  # current amount of views    #changed!
 
     # Loading the surroundings textures
     floor_tile_sprite = pg.image.load("textures/office-floor.png")
@@ -22,6 +22,7 @@ def main():
     coffee_machine_sprite = pg.image.load("textures/coffee-machine.png")
     vending_machine_sprite = pg.image.load("textures/vending-machine.png")
     copy_machine_sprite = pg.image.load("textures/printer.png")
+    safe_sprite = pg.image.load("textures/safe.png")
 
     # Making a dict in order to store keys to all worker texture packs
     texture_dict = {
@@ -49,6 +50,7 @@ def main():
     dining_room = DiningRoom(RESX, RESY, int(RESX * 3 / 4), int(RESY * 1 / 2), coffee_machine_sprite,
                              vending_machine_sprite)
     copy_room = CopyRoom(RESX, RESY, int(RESX * 3 / 4), int(RESY * 3 / 5), copy_machine_sprite)
+    archives = Archives(RESX, RESY, int(RESX * 3 / 4), int(RESY * 3 / 5), safe_sprite)
 
     # Game loop
     run = True
@@ -92,6 +94,12 @@ def main():
             copy_room.blit_machines()
             # copy_room.update_workers()
             copy_room.show_room(win)
+
+        elif view == 4:
+            archives.blit_floor(floor_tile_sprite)
+            archives.blit_machines()
+            # archives.update_workers()
+            archives.show_room(win)
 
         pg.display.update()
 

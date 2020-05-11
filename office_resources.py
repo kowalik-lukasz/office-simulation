@@ -42,7 +42,7 @@ class VendingMachine(Resource):
 
 class CopyMachine(Resource):
 
-    #def __init__(self, sprite, scale_x, scale_y, res_x):
+    # def __init__(self, sprite, scale_x, scale_y, res_x):
     def __init__(self, x, y, sprite):
         # Scaling the base img to the size that is potentially going to be changed according to resolution.
         # self.sprite = pg.transform.rotozoom(sprite, 0, 0.45)
@@ -52,6 +52,12 @@ class CopyMachine(Resource):
         # self.sprite_width, self.sprite_height = self.sprite.get_size()
         # y = self.sprite_height / 4 + 1
         # x = int(res_x / 3) + int(self.sprite_width / 20) + self.sprite_width
+        super().__init__(sprite, x, y)
+
+
+class Safe(Resource):
+
+    def __init__(self, x, y, sprite):
         super().__init__(sprite, x, y)
 
 
