@@ -144,6 +144,10 @@ class DiningRoom(Room):
 
     # Method updating workers' positions within dining room + removing those wo left the room from the workers list
     def update_workers(self):
+        i = 0
+        j = 0
+        x = 0
+        y = 0
         try:
             for worker in super().all_workers:
                 if worker.state not in self.acceptable_states:
@@ -156,11 +160,23 @@ class DiningRoom(Room):
                     elif worker.state == self.acceptable_states[1]:
                         worker.pos_x, worker.pos_y = self.coffee_machine.x, self.coffee_machine.y
                     elif worker.state == self.acceptable_states[2]:
-                        worker.pos_x, worker.pos_y = self.vending_machine.x + self.vending_machine.sprite_width, \
-                                                     self.vending_machine.y + self.vending_machine.sprite_height
+                        worker.pos_x, worker.pos_y = self.vending_machine.x + self.vending_machine.sprite_width + x, \
+                                                     self.vending_machine.y + self.vending_machine.sprite_height + y
+                        x = x + 50
+                        if x == 250:
+                            y = y + 100
+                            x = 0
+                        if y == 200:
+                            y = 0
                     elif worker.state == self.acceptable_states[3]:
-                        worker.pos_x, worker.pos_y = self.coffee_machine.x - self.coffee_machine.sprite_width, \
-                                                     self.coffee_machine.y + self.coffee_machine.sprite_height
+                        worker.pos_x, worker.pos_y = self.vending_machine.x - self.coffee_machine.sprite_width - i, \
+                                                     self.vending_machine.y + self.coffee_machine.sprite_height + j
+                        i = i + 50
+                        if i == 250:
+                            j = j + 100
+                            i = 0
+                        if j == 200:
+                            j = 0
                     if worker not in self.workers:
                         self.workers.append(worker)
 
@@ -228,6 +244,8 @@ class CopyRoom(Room):
         return {"copy_machine" + str(index): copy_machine.lock}
 
     def update_workers(self):
+        i = 0
+        j = 0
         try:
             for worker in super().all_workers:
                 if worker.state not in self.acceptable_states:
@@ -239,10 +257,13 @@ class CopyRoom(Room):
                         worker.pos_x, worker.pos_y = self.copy_machines[worker.number].x, \
                                                      self.copy_machines[worker.number].y
                     elif worker.state == self.acceptable_states[1]:
-                        worker.pos_x, worker.pos_y = self.copy_machines[5].x + \
-                                                     self.copy_machines[5].sprite_width * 1.5, \
-                                                     self.copy_machines[5].y + \
-                                                     self.copy_machines[5].sprite_height * 1.5 * 5
+                        worker.pos_x, worker.pos_y = self.copy_machines[2].x + 100 + i, self.copy_machines[2].y + j
+                        i = i + 50
+                        if i == 250:
+                            j = j + 100
+                            i = 0
+                        if j == 300:
+                            j = 0
                     if worker not in self.workers:
                         self.workers.append(worker)
 
@@ -305,6 +326,8 @@ class Archives(Room):
         return {"safe" + str(index): safe.lock}
 
     def update_workers(self):
+        i = 0
+        j = 0
         try:
             for worker in super().all_workers:
                 if worker.state not in self.acceptable_states:
@@ -315,10 +338,13 @@ class Archives(Room):
                     if worker.state == self.acceptable_states[0]:
                         worker.pos_x, worker.pos_y = self.safes[worker.number].x, self.safes[worker.number].y
                     elif worker.state == self.acceptable_states[1]:
-                        worker.pos_x, worker.pos_y = self.safes[2].x + \
-                                                     self.safes[2].sprite_width * 2, \
-                                                     self.safes[2].y + \
-                                                     self.safes[2].sprite_height * 2
+                        worker.pos_x, worker.pos_y = self.safes[2].x + 100 + i, self.safes[2].y + j
+                        i = i + 50
+                        if i == 250:
+                            j = j + 100
+                            i = 0
+                        if j == 300:
+                            j = 0
                     if worker not in self.workers:
                         self.workers.append(worker)
 
