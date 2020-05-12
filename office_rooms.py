@@ -10,7 +10,6 @@ from office_resources import CopyMachine
 
 
 class Room:
-
     all_workers = []
 
     def __init__(self, RESX, RESY, res_x, res_y):
@@ -171,6 +170,8 @@ class DiningRoom(Room):
 
 
 class CopyRoom(Room):
+    copy_machines = []
+
     def __init__(self, RESX, RESY, res_x, res_y, copy_machine_sprite):
         super().__init__(RESX, RESY, res_x, res_y)
         # self.copy_machine = CopyMachine(copy_machine_sprite, RESX / 2180, RESY / 1700, res_x)
@@ -180,7 +181,7 @@ class CopyRoom(Room):
                                                                int(self.sprite_height * RESY / 5500)))
         self.sprite_width, self.sprite_height = self.sprite.get_size()
         # self.busy = False
-        self.copy_machines = []
+        # self.copy_machines = []
         self._init_copy_machines()
         self.workers = []
         self.copy_machine_queue = queue.Queue
@@ -221,9 +222,10 @@ class CopyRoom(Room):
         for copy_machine in self.copy_machines:
             self.blit_object(copy_machine.x, copy_machine.y, copy_machine.sprite)
 
-    def get_locks(self):
-        for copy_machine in self.copy_machines:
-            return {"copy_machine": copy_machine.lock}
+    def get_locks(self, index):
+        index = index
+        copy_machine = self.copy_machines[index]
+        return {"copy_machine" + str(index): copy_machine.lock}
 
     def update_workers(self):
         try:
@@ -233,14 +235,16 @@ class CopyRoom(Room):
                         self.workers.remove(worker)
                 # Setting up the blitting position of the worker
                 else:
-                    for copy_machine in self.copy_machines:
-                        if worker.state == self.acceptable_states[0]:
-                            worker.pos_x, worker.pos_y = copy_machine.x, copy_machine.y
-                        elif worker.state == self.acceptable_states[1]:
-                            worker.pos_x, worker.pos_y = copy_machine.x + copy_machine.sprite_width, \
-                                                         copy_machine.y + copy_machine.sprite_height
-                        if worker not in self.workers:
-                            self.workers.append(worker)
+                    if worker.state == self.acceptable_states[0]:
+                        worker.pos_x, worker.pos_y = self.copy_machines[worker.number].x, \
+                                                     self.copy_machines[worker.number].y
+                    elif worker.state == self.acceptable_states[1]:
+                        worker.pos_x, worker.pos_y = self.copy_machines[5].x + \
+                                                     self.copy_machines[5].sprite_width * 1.5, \
+                                                     self.copy_machines[5].y + \
+                                                     self.copy_machines[5].sprite_height * 1.5 * 5
+                    if worker not in self.workers:
+                        self.workers.append(worker)
 
             super().blit_workers(self.workers)
         except AttributeError:
@@ -248,14 +252,15 @@ class CopyRoom(Room):
 
 
 class Archives(Room):
+    safes = []
+
     def __init__(self, RESX, RESY, res_x, res_y, safe_sprite):
         super().__init__(RESX, RESY, res_x, res_y)
 
         self.sprite_width, self.sprite_height = safe_sprite.get_size()
         self.sprite = pg.transform.scale(safe_sprite, (int(self.sprite_width * RESX / 6180),
-                                                       int(self.sprite_height * RESY / 5500)))
+                                                       int(self.sprite_height * RESY / 4500)))
         self.sprite_width, self.sprite_height = self.sprite.get_size()
-        self.safes = []
         self._init_safes()
         self.workers = []
         self.safe_queue = queue.Queue
@@ -271,7 +276,7 @@ class Archives(Room):
             while row_blitting:
                 safe_x = int(self.sprite_width / 2) + j * self.sprite_width * 1.5 + j * int(
                     self.sprite_width / 2)
-                safe_y = int(self.sprite_height / 2) + i * self.sprite_height * 1.9 + i * int(
+                safe_y = int(self.sprite_height / 2) + i * self.sprite_height * 2 + i * int(
                     self.sprite_height / 2)
                 try:
                     self.blit_object(safe_x, safe_y, self.sprite)
@@ -286,7 +291,7 @@ class Archives(Room):
                 if j == 3:
                     row_blitting = False
             i += 1
-            if i == 4:
+            if i == 3:
                 blitting = False
 
     def blit_machines(self):
@@ -294,9 +299,10 @@ class Archives(Room):
         for safe in self.safes:
             self.blit_object(safe.x, safe.y, safe.sprite)
 
-    def get_locks(self):
-        for safe in self.safes:
-            return {"safe": safe.lock}
+    def get_locks(self, index):
+        index = index
+        safe = self.safes[index]
+        return {"safe" + str(index): safe.lock}
 
     def update_workers(self):
         try:
@@ -306,14 +312,15 @@ class Archives(Room):
                         self.workers.remove(worker)
                 # Setting up the blitting position of the worker
                 else:
-                    for safe in self.safes:
-                        if worker.state == self.acceptable_states[0]:
-                            worker.pos_x, worker.pos_y = safe.x, safe.y
-                        elif worker.state == self.acceptable_states[1]:
-                            worker.pos_x, worker.pos_y = safe.x + safe.sprite_width, \
-                                                         safe.y + safe.sprite_height
-                        if worker not in self.workers:
-                            self.workers.append(worker)
+                    if worker.state == self.acceptable_states[0]:
+                        worker.pos_x, worker.pos_y = self.safes[worker.number].x, self.safes[worker.number].y
+                    elif worker.state == self.acceptable_states[1]:
+                        worker.pos_x, worker.pos_y = self.safes[2].x + \
+                                                     self.safes[2].sprite_width * 2, \
+                                                     self.safes[2].y + \
+                                                     self.safes[2].sprite_height * 2
+                    if worker not in self.workers:
+                        self.workers.append(worker)
 
             super().blit_workers(self.workers)
         except AttributeError:

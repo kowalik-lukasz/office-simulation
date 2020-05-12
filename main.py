@@ -73,7 +73,12 @@ def main():
         elif keys[pg.K_a]:
             locks = {}
             locks.update(dining_room.get_locks())
-            locks.update(copy_room.get_locks())     # NEW
+            x = range(6)
+            for i in x:
+                locks.update(copy_room.get_locks(i))     # NEW
+            x = range(9)
+            for i in x:
+                locks.update(archives.get_locks(i))      # NEW
             main_room.deploy_new_worker(RESX, RESY, "Sample", "Worker", worker_textures_dict, locks)
 
         # Displaying office views
@@ -92,13 +97,13 @@ def main():
         elif view == 3:
             copy_room.blit_floor(floor_tile_sprite)
             copy_room.blit_machines()
-            # copy_room.update_workers()
+            copy_room.update_workers()
             copy_room.show_room(win)
 
         elif view == 4:
             archives.blit_floor(floor_tile_sprite)
             archives.blit_machines()
-            # archives.update_workers()
+            archives.update_workers()
             archives.show_room(win)
 
         pg.display.update()
